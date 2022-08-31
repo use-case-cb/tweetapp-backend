@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tweetapp.domain.TweetEvent;
 import com.tweetapp.entities.Tweet;
 import com.tweetapp.entities.User;
+import com.tweetapp.kafka.TweetEventProducer;
 import com.tweetapp.repos.TweetRepository;
 import com.tweetapp.repos.UserRepository;
 
@@ -24,6 +27,9 @@ public class TweetService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	TweetEventProducer tweetProd;
 
 	public ResponseEntity<?> allTweets(){
 		log.info("Returning all tweets in database");
@@ -49,7 +55,7 @@ public class TweetService {
 			log.info("Tweet not found");
 			return new ResponseEntity<>("Tweet not found", HttpStatus.OK);
 		}
-		//May have to return list
+
 		List<Tweet> tweet = new ArrayList<>();
 		tweet.add(found);
 		return new ResponseEntity<>(tweet, HttpStatus.OK);
@@ -90,6 +96,14 @@ public class TweetService {
 		
 		tweetRepo.delete(found);
 		log.info("Tweet deleted");
+		
+		try {
+			tweetProd.sendTweetEvent(new TweetEvent(1,found));
+			log.info("Sent Kafka message (delete tweet)");
+		} catch (JsonProcessingException e) {
+			log.error("Error sending Kafka message (delete tweet)");
+		}
+		
 		return new ResponseEntity<>("Tweet deleted", HttpStatus.OK);
 	}
 	

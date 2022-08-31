@@ -24,9 +24,7 @@ public class TweetEventProducer {
 	ObjectMapper objectMapper;
 	
 	public void sendTweetEvent(TweetEvent tweetEvent) throws JsonProcessingException {
-		
-		//kafkaTemplate.send("tweet-events", objectMapper.writeValueAsString(tweetEvent));
-		
+				
 		Integer key = tweetEvent.getTweetEventId();
 		String value = objectMapper.writeValueAsString(tweetEvent);
 		

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.Query;
 import com.tweetapp.entities.Tweet;
 
 public interface TweetRepository extends MongoRepository<Tweet, String>{
+	
 	@Query("{id: ?0}")
 	public Tweet findTweetById(String id);
 	
