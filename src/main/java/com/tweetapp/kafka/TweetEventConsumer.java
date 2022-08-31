@@ -10,8 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TweetEventConsumer {
 
+	/*
 	@KafkaListener(topics={"tweet-events"})
 	public void onMessage(ConsumerRecord<Integer, String> consumerRecord) {
 		log.info("OnMessage Record: {} ", consumerRecord);
 	}
+	*/
 }

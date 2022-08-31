@@ -29,6 +29,13 @@ public class UserService {
 			return new ResponseEntity<>("Username already in use", HttpStatus.BAD_REQUEST);
 		}
 		
+		duplicate = userRepo.findUserByEmail(user.getEmail());
+		
+		if(duplicate!=null) {
+			log.info("User with email: {} already exists", user.getEmail());
+			return new ResponseEntity<>("Email already in use", HttpStatus.BAD_REQUEST);
+		}
+		
 		userRepo.save(user);
 		log.info("User registered with Username: {}", user.getUsername());
 		

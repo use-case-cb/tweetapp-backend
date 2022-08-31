@@ -34,6 +34,8 @@ public class Tweet {
 	
 	private String tags;
 	
+	private String date;
+	
 	Tweet() {}
 	
 	
