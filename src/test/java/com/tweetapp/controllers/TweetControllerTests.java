@@ -1,30 +1,35 @@
 package com.tweetapp.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(TweetController.class)
+import com.tweetapp.repos.TweetRepository;
+import com.tweetapp.services.TweetService;
+
+@ExtendWith(MockitoExtension.class)
 public class TweetControllerTests {
 
-	@Autowired
-	private MockMvc mvc;
+	
+	TweetRepository tweetRepo;
+	
+	TweetService tweetService;
+	
+	//@BeforeEach
+	void setUp() {
+		this.tweetService = new TweetService(tweetRepo);
+		MockitoAnnotations.openMocks(this);
+	}
 	
 	
-	@Test
+	//@Test
 	void showAllTweetsTest() throws Exception{
-		RequestBuilder request = MockMvcRequestBuilders.get("/tweets");
-		MvcResult result = mvc.perform(request).andReturn();
-		System.out.println(result.getResponse().getContentAsString());
-		assertEquals("", result.getResponse().getContentAsString());
+		tweetService.allTweets();
+		verify(tweetRepo).findAll();
 	}
 }

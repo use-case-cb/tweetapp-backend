@@ -22,8 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TweetService {
 	
-	@Autowired
 	TweetRepository tweetRepo;
+	
+	public TweetService(TweetRepository tweetRepo) {
+		this.tweetRepo = tweetRepo;
+	}
 	
 	@Autowired
 	UserRepository userRepo;
@@ -97,13 +100,15 @@ public class TweetService {
 		tweetRepo.delete(found);
 		log.info("Tweet deleted");
 		
+		//Commenting out kafka while testing
+		/*
 		try {
 			tweetProd.sendTweetEvent(new TweetEvent(1,found));
 			log.info("Sent Kafka message (delete tweet)");
 		} catch (JsonProcessingException e) {
 			log.error("Error sending Kafka message (delete tweet)");
 		}
-		
+		*/
 		return new ResponseEntity<>("Tweet deleted", HttpStatus.OK);
 	}
 	
